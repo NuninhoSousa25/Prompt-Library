@@ -1,0 +1,25 @@
+Copy and paste this into an LLM (like Gemini, ChatGPT, or Claude) for a much higher-quality result
+
+Act as a senior frontend developer. Create a single-file HTMLCSSJS web application for a 'Prompt Library.'
+
+Core Functionality
+
+Display A clean list of prompts, each showing a 'Name' and the 'Prompt Text.'
+
+Action A 'Copy' button for each prompt that copies the text to the clipboard and shows a brief 'Copied!' toast notification.
+
+Management A simple form to add new prompts (Name and Text fields).
+
+Persistence Use localStorage so my data is saved in my browser and persists after a page refresh.
+
+Design Specifications
+
+Aesthetic Minimalist, elegant, and professional.
+
+Color Palette Dark grey background (#1a1a1a), white or off-white text, and subtle borders.
+
+Typography Clean sans-serif font stack (Inter or System UI).
+
+Layout Responsive centered card layout.
+
+Please provide the code in a single code block for easy saving.g

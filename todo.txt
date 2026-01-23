@@ -1,0 +1,13 @@
+# Code Review & Improvement Plan (Phase 2)
+
+## UX Enhancements
+- [x] **Markdown Rendering:** Implement basic Markdown parsing (bold, italic, code blocks) for prompt content in the card view to improve readability.
+- [~] **Keyboard Shortcuts:** (Skipped by user request)
+- [x] **Theme Toggle:** Add a button to switch between Dark (default) and Light mode.
+
+## Feature Additions
+- [x] **Code Block Actions:** If a prompt contains markdown code blocks (```...```), add a specific "Copy Code" button for just that block.
+- [x] **Export Versioning:** Add a `version` field to the exported JSON and a check during import to handle potential future schema changes.
+
+## Refinement
+- [x] **Tag Input UI:** Improve the tag input in the modal to use a "Token" or "Chip" style interface instead of just a comma-separated text string, making it easier to manage multiple tags.
