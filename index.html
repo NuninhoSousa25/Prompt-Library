@@ -53,6 +53,7 @@
             flex-direction: column;
             padding: 1.5rem;
             flex-shrink: 0;
+            overflow-y: auto;
         }
 
         .app-title {
@@ -1629,6 +1630,8 @@
                         }
                         
                         let importedCount = 0;
+                        let skippedCount = 0;
+
                         imported.forEach(p => {
                             if (p.name && typeof p.name === 'string' && 
                                 p.content && typeof p.content === 'string') {
@@ -1639,22 +1642,36 @@
                                     return;
                                 }
 
-                                // Sanitize: Create clean object with new ID
-                                const newPrompt = {
+                                // Sanitize: Create clean object
+                                const newPromptData = {
                                     name: p.name.substring(0, 200), // Limit name length
                                     category: (p.category && typeof p.category === 'string') ? p.category.substring(0, 500) : '',
                                     content: p.content
-                                    // ID will be assigned by promptManager.add()
                                 };
+
+                                // Check for duplicates against LIVE list
+                                // This prevents adding if name AND content match exactly
+                                const isDuplicate = this.promptManager.getAll().some(existing => 
+                                    existing.name === newPromptData.name && 
+                                    existing.content === newPromptData.content
+                                );
+
+                                if (isDuplicate) {
+                                    skippedCount++;
+                                    return;
+                                }
                                 
-                                this.promptManager.add(newPrompt);
+                                this.promptManager.add(newPromptData);
                                 importedCount++;
                             }
                         });
 
                         this.renderPrompts();
                         this.renderCategories();
-                        this.showToast(`Imported ${importedCount} prompts`);
+                        
+                        let msg = `Imported ${importedCount} prompts`;
+                        if (skippedCount > 0) msg += `, Skipped ${skippedCount} duplicates`;
+                        this.showToast(msg);
                     } catch (err) {
                         alert("Invalid JSON file: " + err.message);
                     }
