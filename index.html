@@ -251,87 +251,165 @@
         }
 
         .prompt-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1.5rem;
+            columns: 3;
+            column-gap: 1.25rem;
         }
+
+        .prompt-grid .prompt-card {
+            break-inside: avoid;
+            margin-bottom: 1.25rem;
+            display: inline-block;
+            width: 100%;
+        }
+
+        @media (max-width: 1200px) { .prompt-grid { columns: 2; } }
+        @media (max-width: 700px)  { .prompt-grid { columns: 1; } }
 
         /* Card Styles */
         .prompt-card {
             background-color: var(--card-bg);
             border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 1.25rem;
+            border-radius: 10px;
+            padding: 1.1rem 1.25rem 1rem;
             display: flex;
             flex-direction: column;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: box-shadow 0.2s, border-color 0.2s;
         }
 
         .prompt-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            border-color: #555;
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+            border-color: #484848;
         }
 
         .card-header {
             display: flex;
-            justify-content: space-between;
             align-items: flex-start;
-            margin-bottom: 0.75rem;
+            justify-content: space-between;
+            gap: 0.5rem;
+            margin-bottom: 0.6rem;
         }
 
         .card-title {
             font-weight: 600;
-            font-size: 1rem;
-            margin-bottom: 0.25rem;
+            font-size: 0.95rem;
+            line-height: 1.3;
+            margin-bottom: 0.4rem;
+        }
+
+        .card-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.3rem;
         }
 
         .card-category {
-            font-size: 0.75rem;
-            background-color: #333;
-            color: #ccc;
-            padding: 0.1rem 0.4rem;
-            border-radius: 4px;
+            font-size: 0.7rem;
+            background-color: rgba(74, 158, 255, 0.1);
+            color: var(--accent-color);
+            border: 1px solid rgba(74, 158, 255, 0.25);
+            padding: 0.15rem 0.5rem;
+            border-radius: 20px;
             display: inline-block;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .card-category:hover {
+            background-color: rgba(74, 158, 255, 0.2);
+        }
+
+        /* Expand/collapse system */
+        .card-body-wrapper {
+            position: relative;
+            margin-bottom: 0.75rem;
+            flex: 1;
         }
 
         .card-body {
-            font-size: 0.9rem;
+            font-size: 0.875rem;
             color: var(--text-secondary);
-            margin-bottom: 1rem;
-            flex: 1;
-            white-space: pre-wrap;
-            max-height: 150px;
-            overflow-y: hidden;
-            position: relative;
+            line-height: 1.6;
+            overflow: hidden;
+            max-height: 130px;
+            transition: max-height 0.3s ease;
         }
 
-        .card-body.masked::after {
-            content: '';
+        .card-body.expanded {
+            max-height: 9999px;
+        }
+
+        .card-fade {
             position: absolute;
             bottom: 0;
             left: 0;
             right: 0;
-            height: 40px;
+            height: 48px;
             background: linear-gradient(transparent, var(--card-bg));
+            pointer-events: none;
+            transition: opacity 0.2s;
         }
 
-        .card-body.expanded {
-            max-height: none;
-            overflow-y: visible;
+        .card-fade.hidden {
+            opacity: 0;
         }
 
-        .card-body.expanded::after {
-            display: none;
+        .expand-btn {
+            display: block;
+            width: 100%;
+            background: none;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            padding: 0.3rem;
+            cursor: pointer;
+            text-align: center;
+            margin-bottom: 0.6rem;
+            transition: background 0.15s, color 0.15s;
+            letter-spacing: 0.03em;
+        }
+
+        .expand-btn:hover {
+            background: var(--border-color);
+            color: var(--text-primary);
         }
 
         /* Markdown Styles */
+        .card-body h1, .card-body h2, .card-body h3 {
+            color: var(--text-primary);
+            font-weight: 600;
+            margin: 0.8rem 0 0.3rem;
+            line-height: 1.3;
+        }
+        .card-body h1 { font-size: 1rem; }
+        .card-body h2 { font-size: 0.92rem; letter-spacing: 0.02em; }
+        .card-body h3 { font-size: 0.87rem; }
+
+        .card-body p {
+            margin: 0.4rem 0;
+        }
+
+        .card-body hr {
+            border: none;
+            border-top: 1px solid var(--border-color);
+            margin: 0.6rem 0;
+        }
+
+        .card-body ul, .card-body ol {
+            padding-left: 1.2rem;
+            margin: 0.3rem 0;
+        }
+
+        .card-body li {
+            margin: 0.15rem 0;
+        }
+
         .card-body pre {
             background-color: #1a1a1a;
             padding: 2rem 0.8rem 0.8rem 0.8rem;
             border-radius: 4px;
             overflow-x: auto;
-            margin: 0;
+            margin: 0.5rem 0;
             border: 1px solid var(--border-color);
         }
         
@@ -363,9 +441,9 @@
 
         .card-body code {
             font-family: 'Consolas', 'Monaco', monospace;
-            font-size: 0.9em;
-            background-color: rgba(255, 255, 255, 0.1);
-            padding: 0.1rem 0.3rem;
+            font-size: 0.85em;
+            background-color: rgba(255, 255, 255, 0.08);
+            padding: 0.1rem 0.35rem;
             border-radius: 3px;
             color: #dcdcaa;
         }
@@ -377,12 +455,13 @@
         }
 
         .card-body strong {
-            color: white;
-            font-weight: 700;
+            color: var(--text-primary);
+            font-weight: 650;
         }
 
         .card-body em {
             color: var(--text-primary);
+            font-style: italic;
         }
         
         mark {
@@ -455,56 +534,8 @@
             color: white;
         }
 
-        .btn-add-build {
-            color: var(--accent-color);
-        }
-
         .btn-delete:hover {
             color: var(--danger-color);
-        }
-
-        /* --- Right Sidebar (Builder) --- */
-        .sidebar-right {
-            width: 320px;
-            background-color: var(--sidebar-bg);
-            border-left: 1px solid var(--border-color);
-            display: none; /* Hidden by default */
-            flex-direction: column;
-            padding: 1.5rem;
-            flex-shrink: 0;
-        }
-
-        .sidebar-right.open {
-            display: flex;
-        }
-
-        .builder-container {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .builder-textarea {
-            flex: 1;
-            background-color: #121212;
-            border: 1px solid var(--border-color);
-            color: var(--text-primary);
-            padding: 1rem;
-            resize: none;
-            border-radius: 6px;
-            margin-bottom: 1rem;
-            font-family: inherit;
-            line-height: 1.5;
-        }
-
-        .builder-textarea:focus {
-            outline: none;
-            border-color: var(--accent-color);
-        }
-
-        .builder-controls {
-            display: flex;
-            gap: 0.5rem;
         }
 
         .full-btn {
@@ -596,31 +627,99 @@
             margin-top: 3rem;
             font-size: 1.1rem;
         }
-
-        @media (max-width: 1000px) {
-            .sidebar-right {
-                position: fixed;
-                right: -320px;
-                top: 0;
-                bottom: 0;
-                z-index: 1000;
-                transition: right 0.3s;
-                display: flex !important; /* Override display: none */
-                box-shadow: -5px 0 15px rgba(0,0,0,0.5);
-            }
-
-            .sidebar-right.open {
-                right: 0;
-            }
-
-            #mobileBuilderBtn {
-                display: block !important;
-            }
-
-            #closeBuilderBtn {
-                display: block !important;
-            }
+        /* Wide modal for editor */
+        .modal-wide {
+            width: min(1100px, 95vw) !important;
         }
+
+        /* Edit/Split/Preview toggle */
+        .preview-toggle-group {
+            display: flex;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .preview-toggle {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            padding: 0.35rem 0.85rem;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: background 0.15s, color 0.15s;
+            font-family: inherit;
+        }
+
+        .preview-toggle:not(:last-child) {
+            border-right: 1px solid var(--border-color);
+        }
+
+        .preview-toggle.active,
+        .preview-toggle:hover {
+            background: rgba(74, 158, 255, 0.15);
+            color: var(--accent-color);
+        }
+
+        /* Two-pane layout */
+        .editor-panes {
+            display: flex;
+            gap: 0.75rem;
+            height: 420px;
+        }
+
+        .editor-pane {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+        }
+
+        .pane-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-secondary);
+            margin-bottom: 0.35rem;
+            font-weight: 600;
+        }
+
+        .editor-textarea {
+            flex: 1;
+            resize: none;
+            min-height: 0;
+            margin: 0 !important;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+
+        .preview-pane {
+            display: none;
+        }
+
+        .editor-preview-body {
+            flex: 1;
+            overflow-y: auto;
+            background: rgba(0,0,0,0.2);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 0.8rem 1rem;
+            font-size: 0.875rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        /* Mode states */
+        .editor-panes.mode-edit .preview-pane   { display: none; }
+        .editor-panes.mode-edit .editor-pane    { display: flex; }
+
+        .editor-panes.mode-preview .editor-pane { display: none; }
+        .editor-panes.mode-preview .preview-pane { display: flex; }
+
+        .editor-panes.mode-split .editor-pane   { display: flex; }
+        .editor-panes.mode-split .preview-pane  { display: flex; }
+
     </style>
 </head>
 
@@ -641,8 +740,11 @@
         <div class="bottom-actions">
             <button class="category-btn" id="manageCatsBtn">Manage Categories</button>
             <button class="category-btn" id="themeBtn">Toggle Theme</button>
-            <button class="category-btn" id="exportBtn">Export JSON</button>
-            <button class="category-btn" id="importBtn">Import JSON</button>
+            <button class="category-btn" id="exportBtn">⬇ Export JSON</button>
+            <button class="category-btn" id="importBtn">📁 Import File</button>
+            <button class="category-btn" id="syncBtn" title="Fetch prompts from remote URL">🔄 Sync from URL</button>
+            <button class="category-btn" id="deleteAllBtn" style="color: var(--danger-color);">🗑 Delete All</button>
+            <div id="syncStatus" style="font-size:0.75rem; color: var(--text-secondary); padding: 0.25rem 0.75rem; min-height: 1.2rem;"></div>
             <input type="file" id="importInput" accept=".json" style="display: none;">
         </div>
     </aside>
@@ -652,9 +754,6 @@
         <header class="top-bar">
             <input type="text" class="search-bar" id="searchInput" placeholder="Search prompts...">
             <div style="display: flex; gap: 0.5rem;">
-                <button class="action-btn" id="toggleBuilderBtn" style="display: flex; align-items: center; gap: 0.5rem; border: 1px solid var(--border-color); font-weight: 500;" title="Toggle Builder">
-                    <span style="font-size: 1.2rem;">◫</span> Prompt Builder
-                </button>
                 <button class="add-btn" id="openAddModalBtn">+ New Prompt</button>
             </div>
         </header>
@@ -666,37 +765,42 @@
         </div>
     </main>
 
-    <!-- Right Sidebar (Builder) -->
-    <aside class="sidebar-right" id="builderSidebar">
-        <div class="nav-label" style="display: flex; justify-content: space-between; align-items: center;">
-            Prompt Builder
-            <button id="closeBuilderBtn" class="action-btn" style="display: none; font-size: 1.2rem;">&times;</button>
-        </div>
-        <div class="builder-container">
-            <textarea class="builder-textarea" id="builderArea"
-                placeholder="Click (+) on cards to add prompts here. Edit and combine them..."></textarea>
-            <div class="builder-controls">
-                <button class="full-btn btn-clear" id="clearBuilder">Clear</button>
-                <button class="full-btn btn-copy" id="copyBuilder">Copy All</button>
-            </div>
-        </div>
-    </aside>
-
     <!-- Add/Edit Modal -->
     <div class="modal-overlay" id="modal">
-        <div class="modal-content">
-            <h2 style="margin-bottom: 1.5rem;">Manage Prompt</h2>
-            <input type="text" id="modalName" placeholder="Prompt Name">
-            <div id="tagPreview" class="tag-preview"></div>
-            <input type="text" id="modalCategory" placeholder="Tags (comma separated)" autocomplete="off">
-            <div id="tagSuggestions" class="tag-suggestions"></div>
-            <textarea class="form-input" id="modalContent" style="min-height: 400px;"
-                placeholder="Prompt Text"></textarea>
-            <div style="display: flex; gap: 1rem; justify-content: flex-end;">
-                <button class="full-btn btn-clear" id="closeModal"
-                    style="width: auto; padding: 0.6rem 1.5rem;">Cancel</button>
-                <button class="full-btn btn-copy" id="saveModal"
-                    style="width: auto; padding: 0.6rem 1.5rem;">Save</button>
+        <div class="modal-content modal-wide">
+            <!-- Header row -->
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+                <h2 style="margin:0;">Manage Prompt</h2>
+                <div class="preview-toggle-group">
+                    <button class="preview-toggle active" id="modeEdit" onclick="setEditorMode('edit')">Edit</button>
+                    <button class="preview-toggle" id="modeSplit" onclick="setEditorMode('split')">Split</button>
+                    <button class="preview-toggle" id="modePreview" onclick="setEditorMode('preview')">Preview</button>
+                </div>
+            </div>
+            <!-- Meta fields -->
+            <div style="display:flex; gap:0.75rem; margin-bottom:0.5rem;">
+                <input type="text" id="modalName" placeholder="Prompt Name" style="flex:1; margin:0;">
+                <input type="text" id="modalCategory" placeholder="Tags (comma separated)" autocomplete="off" style="flex:1; margin:0;">
+            </div>
+            <div style="display:flex; gap:0.75rem; margin-bottom:0.75rem; align-items:flex-start;">
+                <div id="tagPreview" class="tag-preview" style="flex:1; margin:0;"></div>
+                <div id="tagSuggestions" class="tag-suggestions" style="flex:1; margin:0;"></div>
+            </div>
+            <!-- Editor / Preview panes -->
+            <div class="editor-panes" id="editorPanes">
+                <div class="editor-pane" id="editorPane">
+                    <div class="pane-label">Markdown</div>
+                    <textarea class="form-input editor-textarea" id="modalContent" placeholder="Prompt text… supports **bold**, ## headings, ``` code blocks```"></textarea>
+                </div>
+                <div class="editor-pane preview-pane" id="previewPane">
+                    <div class="pane-label">Preview</div>
+                    <div class="editor-preview-body card-body expanded" id="modalPreview"></div>
+                </div>
+            </div>
+            <!-- Footer -->
+            <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top:1rem;">
+                <button class="full-btn btn-clear" id="closeModal" style="width: auto; padding: 0.6rem 1.5rem;">Cancel</button>
+                <button class="full-btn btn-copy" id="saveModal" style="width: auto; padding: 0.6rem 1.5rem;">Save</button>
             </div>
         </div>
     </div>
@@ -711,6 +815,26 @@
                 style="max-height: 300px; overflow-y: auto; display: flex; flex-direction: column; gap: 0.5rem;"></div>
             <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 1.5rem;">
                 <button class="full-btn btn-clear" id="closeCatModal" style="width: auto;">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sync URL Modal -->
+    <div class="modal-overlay" id="syncModal">
+        <div class="modal-content" style="width: 500px;">
+            <h2 style="margin-bottom: 0.5rem;">🔄 Sync from URL</h2>
+            <p style="color:var(--text-secondary); font-size: 0.85rem; margin-bottom: 1.25rem;">
+                Fetches a <code style="font-size:0.8rem; background:rgba(255,255,255,0.08); padding:1px 5px; border-radius:3px;">prompts_backup.json</code> from the URL below and merges new prompts in. Existing local prompts are never deleted.
+            </p>
+            <label style="font-size:0.8rem; color:var(--text-secondary); display:block; margin-bottom:0.4rem;">Remote JSON URL</label>
+            <input type="url" id="syncUrlInput" placeholder="https://example.com/prompts_backup.json" style="margin-bottom:1rem;">
+            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.25rem;">
+                <input type="checkbox" id="syncOnLoad" style="width:auto; margin:0; accent-color: var(--accent-color);">
+                <label for="syncOnLoad" style="font-size:0.85rem; color:var(--text-secondary); cursor:pointer;">Auto-sync on page load</label>
+            </div>
+            <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                <button class="full-btn btn-clear" id="closeSyncModal" style="width: auto; padding: 0.6rem 1.5rem;">Cancel</button>
+                <button class="full-btn btn-copy" id="confirmSync" style="width: auto; padding: 0.6rem 1.5rem;">Sync Now</button>
             </div>
         </div>
     </div>
@@ -731,12 +855,57 @@
 
     <script>
         // --- Data Layer ---
+        const DEFAULT_SYNC_URL = 'https://nuno-sousa.com/repository/uploads/prompts_backup.json';
+
         class PromptManager {
             constructor() {
                 this.prompts = JSON.parse(localStorage.getItem('prompts')) || [];
                 // Load category order, or init empty
                 this.categoryOrder = JSON.parse(localStorage.getItem('categoryOrder')) || [];
+                this.syncUrl = localStorage.getItem('syncUrl') || DEFAULT_SYNC_URL;
+                this.syncOnLoad = localStorage.getItem('syncOnLoad') === 'true';
                 this.migrate();
+            }
+
+            saveSyncSettings(url, onLoad) {
+                this.syncUrl = url;
+                this.syncOnLoad = onLoad;
+                localStorage.setItem('syncUrl', url);
+                localStorage.setItem('syncOnLoad', onLoad ? 'true' : 'false');
+            }
+
+            async fetchFromUrl(url) {
+                const response = await fetch(url, { cache: 'no-store' });
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                const json = await response.json();
+                let incoming = [];
+                if (Array.isArray(json)) {
+                    incoming = json;
+                } else if (json.prompts && Array.isArray(json.prompts)) {
+                    incoming = json.prompts;
+                } else {
+                    throw new Error('Invalid format: expected array or { prompts: [] }');
+                }
+                return incoming;
+            }
+
+            mergePrompts(incoming) {
+                let added = 0, skipped = 0;
+                incoming.forEach(p => {
+                    if (!p.name || !p.content) return;
+                    if (p.content.length > 100000) { skipped++; return; }
+                    const isDuplicate = this.prompts.some(e =>
+                        e.name === p.name.substring(0, 200) && e.content === p.content
+                    );
+                    if (isDuplicate) { skipped++; return; }
+                    this.add({
+                        name: p.name.substring(0, 200),
+                        category: (p.category && typeof p.category === 'string') ? p.category.substring(0, 500) : '',
+                        content: p.content
+                    });
+                    added++;
+                });
+                return { added, skipped };
             }
 
             migrate() {
@@ -928,7 +1097,6 @@
                 this.grid = document.getElementById('promptGrid');
                 this.catList = document.getElementById('categoryList');
                 this.modal = document.getElementById('modal');
-                this.builderArea = document.getElementById('builderArea');
                 this.toast = document.getElementById('toast');
 
                 // Modal Inputs
@@ -963,6 +1131,14 @@
                 document.getElementById('saveModal').addEventListener('click', () => this.handleSaveModal());
                 this.modalCategory.addEventListener('input', () => this.handleTagInput());
 
+                // Live markdown preview
+                document.getElementById('modalContent').addEventListener('input', () => {
+                    this.updateModalPreview();
+                });
+
+                // Mode switcher exposed globally for inline onclick
+                window.setEditorMode = (mode) => this.setEditorMode(mode);
+
                 // Cat Manager
                 document.getElementById('manageCatsBtn').addEventListener('click', () => this.openCatManager());
                 document.getElementById('closeCatModal').addEventListener('click', () => document.getElementById('catModal').classList.remove('open'));
@@ -974,17 +1150,6 @@
                 document.getElementById('closeVarModal').addEventListener('click', () => this.closeVarModal());
                 document.getElementById('confirmVarModal').addEventListener('click', () => this.handleVarSubmit());
 
-                // Builder Toggle
-                document.getElementById('toggleBuilderBtn').addEventListener('click', () => {
-                    document.getElementById('builderSidebar').classList.toggle('open');
-                });
-                document.getElementById('closeBuilderBtn').addEventListener('click', () => {
-                    document.getElementById('builderSidebar').classList.remove('open');
-                });
-
-                document.getElementById('copyBuilder').addEventListener('click', () => this.copyBuilderText());
-                document.getElementById('clearBuilder').addEventListener('click', () => this.builderArea.value = '');
-
                 document.getElementById('searchInput').addEventListener('input', this.debounce((e) => {
                     this.searchTerm = e.target.value.toLowerCase();
                     this.renderPrompts();
@@ -994,9 +1159,16 @@
                 document.getElementById('importBtn').addEventListener('click', () => document.getElementById('importInput').click());
                 document.getElementById('importInput').addEventListener('change', (e) => this.importPrompts(e));
 
+                // Sync modal
+                document.getElementById('syncBtn').addEventListener('click', () => this.openSyncModal());
+                document.getElementById('closeSyncModal').addEventListener('click', () => document.getElementById('syncModal').classList.remove('open'));
+                document.getElementById('confirmSync').addEventListener('click', () => this.handleSync());
+
+                // Delete All
+                document.getElementById('deleteAllBtn').addEventListener('click', () => this.deleteAll());
+
                 // Global access for onclick handlers in HTML (legacy support for inline onclicks)
                 window.setCategory = (cat) => this.setCategory(cat);
-                window.addToBuilder = (id) => this.addToBuilder(id);
                 window.deletePrompt = (id) => this.deletePrompt(id);
                 window.copyPrompt = (id) => this.copyPrompt(id);
                 window.downloadPrompt = (id) => this.downloadPrompt(id);
@@ -1010,6 +1182,7 @@
             init() {
                 this.renderPrompts();
                 this.renderCategories();
+                this.autoSync();
             }
 
             initTheme() {
@@ -1261,27 +1434,89 @@
 
             parseMarkdown(text) {
                 if (!text) return '';
-                // 1. Escape HTML
-                let html = text
-                    .replace(/&/g, "&amp;")
-                    .replace(/</g, "&lt;")
-                    .replace(/>/g, "&gt;")
-                    .replace(/"/g, "&quot;")
-                    .replace(/'/g, "&#039;");
 
-                // 2. Code Blocks
-                html = html.replace(/```([\s\S]*?)```/g, (match, code) => {
-                    return `<div class="code-block-wrapper"><button class="copy-code-btn" onclick="copyCodeBlock(this)">Copy Code</button><pre><code>${code}</code></pre></div>`;
+                // 1. Extract and protect code blocks before any other processing
+                const codeBlocks = [];
+                text = text.replace(/```([\w]*)\n?([\s\S]*?)```/g, (_, lang, code) => {
+                    const escaped = code
+                        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                    const idx = codeBlocks.length;
+                    codeBlocks.push(`<div class="code-block-wrapper"><button class="copy-code-btn" onclick="copyCodeBlock(this)">Copy</button><pre><code>${escaped}</code></pre></div>`);
+                    return `\x00CODE${idx}\x00`;
                 });
 
-                // 3. Inline Code
+                // 2. Escape HTML in remaining text
+                text = text
+                    .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
+                // 3. Process line by line
+                const lines = text.split('\n');
+                const output = [];
+                let i = 0;
+
+                while (i < lines.length) {
+                    const line = lines[i];
+
+                    // Headings
+                    if (/^### (.+)/.test(line)) { output.push(`<h3>${line.replace(/^### /, '')}</h3>`); i++; continue; }
+                    if (/^## (.+)/.test(line))  { output.push(`<h2>${line.replace(/^## /, '')}</h2>`); i++; continue; }
+                    if (/^# (.+)/.test(line))   { output.push(`<h1>${line.replace(/^# /, '')}</h1>`); i++; continue; }
+
+                    // Horizontal rule: ---, ***, ===
+                    if (/^(-{3,}|\*{3,}|={3,})$/.test(line.trim())) { output.push('<hr>'); i++; continue; }
+
+                    // Code block placeholders
+                    if (/^\x00CODE\d+\x00$/.test(line.trim())) {
+                        const idx = parseInt(line.match(/\x00CODE(\d+)\x00/)[1]);
+                        output.push(codeBlocks[idx]);
+                        i++; continue;
+                    }
+
+                    // Unordered list
+                    if (/^[\*\-] (.+)/.test(line)) {
+                        const items = [];
+                        while (i < lines.length && /^[\*\-] (.+)/.test(lines[i])) {
+                            items.push(`<li>${lines[i].replace(/^[\*\-] /, '')}</li>`);
+                            i++;
+                        }
+                        output.push(`<ul>${items.join('')}</ul>`);
+                        continue;
+                    }
+
+                    // Ordered list
+                    if (/^\d+\. (.+)/.test(line)) {
+                        const items = [];
+                        while (i < lines.length && /^\d+\. (.+)/.test(lines[i])) {
+                            items.push(`<li>${lines[i].replace(/^\d+\. /, '')}</li>`);
+                            i++;
+                        }
+                        output.push(`<ol>${items.join('')}</ol>`);
+                        continue;
+                    }
+
+                    // Empty line → paragraph break
+                    if (line.trim() === '') { output.push('<br>'); i++; continue; }
+
+                    // Regular paragraph line
+                    output.push(`<p>${line}</p>`);
+                    i++;
+                }
+
+                // 4. Inline formatting on the assembled HTML
+                let html = output.join('');
+
+                // Restore code block placeholders that were inside paragraphs
+                codeBlocks.forEach((block, idx) => {
+                    html = html.replace(new RegExp(`\x00CODE${idx}\x00`, 'g'), block);
+                });
+
+                // Inline code
                 html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
-
-                // 4. Bold
-                html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
-
-                // 5. Italic
-                html = html.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+                // Bold
+                html = html.replace(/\*\*([^*\n]+)\*\*/g, '<strong>$1</strong>');
+                // Italic (only _ to avoid clashing with *)
+                html = html.replace(/_([^_\n]+)_/g, '<em>$1</em>');
 
                 return html;
             }
@@ -1331,25 +1566,37 @@
                 filtered.forEach(p => {
                     const card = document.createElement('div');
                     card.className = 'prompt-card';
-                    const isLong = p.content.length > 100;
+                    const isLong = p.content.length > 300;
 
-                    const tagsHtml = p.category ? p.category.split(',').map(tag => `<span class="card-category">${this.escapeHtml(tag.trim())}</span>`).join(' ') : '';
+                    // Tags: strip sub-path, show only leaf name with full path as title
+                    const tagsHtml = p.category
+                        ? p.category.split(',').map(tag => {
+                            const trimmed = tag.trim();
+                            const leaf = trimmed.split('/').pop();
+                            return `<span class="card-category" title="${this.escapeHtml(trimmed)}" onclick="setCategory('${trimmed.replace(/'/g,"\\'")}')">
+                                ${this.escapeHtml(leaf)}
+                            </span>`;
+                          }).join('')
+                        : '';
+
                     const contentHtml = this.parseMarkdown(p.content);
                     const titleHtml = this.highlightText(p.name, searchTokens);
 
                     card.innerHTML = `
                         <div class="card-header">
-                            <div>
+                            <div style="min-width:0">
                                 <div class="card-title">${titleHtml}</div>
-                                ${tagsHtml}
+                                <div class="card-tags">${tagsHtml}</div>
                             </div>
                         </div>
-                        <div class="card-body ${isLong ? 'masked' : ''}" id="card-body-${p.id}">${contentHtml}</div>
+                        <div class="card-body-wrapper">
+                            <div class="card-body" id="card-body-${p.id}">${contentHtml}</div>
+                            ${isLong ? `<div class="card-fade" id="card-fade-${p.id}"></div>` : ''}
+                        </div>
+                        ${isLong ? `<button class="expand-btn" id="expand-btn-${p.id}" onclick="toggleExpand(this, '${p.id}')">▾ Show more</button>` : ''}
                         <div class="card-actions">
                             <button class="action-btn" aria-label="Copy Prompt" onclick="copyPrompt('${p.id}')">Copy</button>
                             <button class="action-btn" aria-label="Download" title="Download as .md" onclick="downloadPrompt('${p.id}')">⬇</button>
-                            ${isLong ? `<button class="action-btn" aria-label="Toggle Expand" onclick="toggleExpand(this, '${p.id}')">Expand</button>` : ''}
-                            <button class="action-btn btn-add-build" aria-label="Add to Builder" title="Add to Builder" onclick="addToBuilder('${p.id}')">✚ Add</button>
                             <button class="action-btn" aria-label="Edit Prompt" onclick="openEdit('${p.id}')">Edit</button>
                             <button class="action-btn btn-delete" aria-label="Delete Prompt" onclick="deletePrompt('${p.id}')">Del</button>
                         </div>
@@ -1359,20 +1606,6 @@
 
                 this.grid.innerHTML = '';
                 this.grid.appendChild(fragment);
-            }
-
-            // Actions
-            addToBuilder(id) {
-                const prompt = this.promptManager.get(id);
-                if (prompt) {
-                    this.builderArea.value += (this.builderArea.value ? '\n\n' : '') + prompt.content;
-                    this.showToast("Added to Builder");
-                }
-            }
-
-            copyBuilderText() {
-                if (!this.builderArea.value) return;
-                this.copyText(this.builderArea.value);
             }
 
             copyPrompt(id) {
@@ -1480,13 +1713,28 @@
                 }
             }
 
+            deleteAll() {
+                const count = this.promptManager.getAll().length;
+                if (count === 0) return this.showToast('No prompts to delete');
+                if (confirm(`Delete all ${count} prompt${count !== 1 ? 's' : ''}? This cannot be undone.`)) {
+                    this.promptManager.prompts = [];
+                    this.promptManager.categoryOrder = [];
+                    this.promptManager.save();
+                    this.promptManager.saveOrder();
+                    this.activeCategory = 'all';
+                    this.renderPrompts();
+                    this.renderCategories();
+                    this.showToast('All prompts deleted');
+                }
+            }
+
             toggleExpand(btn, id) {
                 const body = document.getElementById(`card-body-${id}`);
-                if (body) {
-                    body.classList.toggle('expanded');
-                    const isExpanded = body.classList.contains('expanded');
-                    btn.textContent = isExpanded ? 'Collapse' : 'Expand';
-                }
+                const fade = document.getElementById(`card-fade-${id}`);
+                if (!body) return;
+                const isExpanded = body.classList.toggle('expanded');
+                if (fade) fade.classList.toggle('hidden', isExpanded);
+                btn.textContent = isExpanded ? '▴ Show less' : '▾ Show more';
             }
 
             handleTagInput() {
@@ -1520,6 +1768,22 @@
                 this.modalCategory.focus();
             }
 
+            setEditorMode(mode) {
+                const panes = document.getElementById('editorPanes');
+                panes.className = `editor-panes mode-${mode}`;
+                document.querySelectorAll('.preview-toggle').forEach(b => b.classList.remove('active'));
+                const btn = document.getElementById(`mode${mode.charAt(0).toUpperCase() + mode.slice(1)}`);
+                if (btn) btn.classList.add('active');
+                if (mode !== 'edit') this.updateModalPreview();
+            }
+
+            updateModalPreview() {
+                const preview = document.getElementById('modalPreview');
+                if (!preview) return;
+                const text = document.getElementById('modalContent').value;
+                preview.innerHTML = this.parseMarkdown(text) || '<span style="opacity:0.4;font-style:italic;">Nothing to preview yet…</span>';
+            }
+
             // Modal
             openModal(id = null) {
                 this.editingId = id;
@@ -1536,6 +1800,7 @@
                     this.modalContent.value = '';
                 }
                 this.handleTagInput();
+                this.setEditorMode('edit');
                 this.modal.classList.add('open');
             }
 
@@ -1588,6 +1853,72 @@
                 });
 
                 document.getElementById('catModal').classList.add('open');
+            }
+
+            openSyncModal() {
+                const urlInput = document.getElementById('syncUrlInput');
+                const onLoadCheck = document.getElementById('syncOnLoad');
+                urlInput.value = this.promptManager.syncUrl;
+                onLoadCheck.checked = this.promptManager.syncOnLoad;
+                document.getElementById('syncModal').classList.add('open');
+            }
+
+            async handleSync() {
+                const urlInput = document.getElementById('syncUrlInput');
+                const onLoadCheck = document.getElementById('syncOnLoad');
+                const url = urlInput.value.trim();
+                if (!url) return alert('Please enter a URL');
+
+                const confirmBtn = document.getElementById('confirmSync');
+                const statusEl = document.getElementById('syncStatus');
+                confirmBtn.textContent = 'Syncing…';
+                confirmBtn.disabled = true;
+
+                // Save settings regardless
+                this.promptManager.saveSyncSettings(url, onLoadCheck.checked);
+
+                try {
+                    const incoming = await this.promptManager.fetchFromUrl(url);
+                    const { added, skipped } = this.promptManager.mergePrompts(incoming);
+                    this.renderPrompts();
+                    this.renderCategories();
+                    document.getElementById('syncModal').classList.remove('open');
+                    const msg = added > 0
+                        ? `✓ Synced: ${added} new prompt${added !== 1 ? 's' : ''} added${skipped ? `, ${skipped} skipped` : ''}`
+                        : `✓ Up to date — no new prompts${skipped ? ` (${skipped} skipped)` : ''}`;
+                    statusEl.textContent = msg;
+                    this.showToast(added > 0 ? `+${added} prompts synced!` : 'Already up to date');
+                    setTimeout(() => statusEl.textContent = '', 8000);
+                } catch (err) {
+                    this.showToast('Sync failed!');
+                    statusEl.textContent = `✗ ${err.message}`;
+                    setTimeout(() => statusEl.textContent = '', 8000);
+                } finally {
+                    confirmBtn.textContent = 'Sync Now';
+                    confirmBtn.disabled = false;
+                }
+            }
+
+            async autoSync() {
+                const { syncUrl, syncOnLoad } = this.promptManager;
+                if (!syncOnLoad || !syncUrl) return;
+                const statusEl = document.getElementById('syncStatus');
+                statusEl.textContent = '⏳ Auto-syncing…';
+                try {
+                    const incoming = await this.promptManager.fetchFromUrl(syncUrl);
+                    const { added } = this.promptManager.mergePrompts(incoming);
+                    if (added > 0) {
+                        this.renderPrompts();
+                        this.renderCategories();
+                        statusEl.textContent = `✓ Auto-synced: +${added} new prompt${added !== 1 ? 's' : ''}`;
+                    } else {
+                        statusEl.textContent = '✓ Up to date';
+                    }
+                    setTimeout(() => statusEl.textContent = '', 5000);
+                } catch (err) {
+                    statusEl.textContent = `✗ Auto-sync failed: ${err.message}`;
+                    setTimeout(() => statusEl.textContent = '', 8000);
+                }
             }
 
             // Import/Export
